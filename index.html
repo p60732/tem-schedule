@@ -512,22 +512,6 @@ function gsSave() {
   }, 1200); // 1.2s debounce（等操作穩定後才儲存）
 }
 
-// ── 工號對照表 API ──
-async function gsGetEmpIds() {
-  return await gsCall('getEmpIds');
-}
-async function gsSetEmpIds(rows) {
-  return await gsCall('setEmpIds', { rows });
-}
-
-// ── 連線測試 ──
-async function gsPing() {
-  try {
-    const r = await gsCall('ping');
-    return r.pong === true;
-  } catch { return false; }
-}
-
 
 // ═══════════════════════════════════════════════════════════════
 //  CONSTANTS
@@ -615,104 +599,7 @@ function defState() {
   return {
     stage: 0, p2WaveStatus: {wave:1,submitted:{},pendingRevise:{},confirmType:{}}, p3Requests: {}, p3FinalSubmitted: {}, p3WaveStatus:{draft:{},confirmType:{}}, emergencyLeave:{}, emgAssign:{}, emgDispatch:{},
     schedMonth: (function(){ const n=new Date(); return {y:n.getFullYear(), m:n.getMonth()}; })(),
-    members: [
-      { id:1, name:'李欽翔', shift:'NA', site:'P6', skills:['nonCS','派工'], prefTool:[] },
-      { id:2, name:'張德淇', shift:'NA', site:'P6', skills:['nonCS','代理'], prefTool:[] },
-      { id:3, name:'關榮豪', shift:'NA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:4, name:'郭紫妍', shift:'NA', site:'P6', skills:['nonCS','代理'], prefTool:[] },
-      { id:5, name:'張智淵', shift:'NA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:6, name:'陳怡璇', shift:'NA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:7, name:'胡芷容', shift:'NA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:8, name:'陳玉凡', shift:'NA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:9, name:'李秋婷', shift:'NA', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:10, name:'劉佩芝', shift:'NA', site:'P2', skills:['CS','派工'], prefTool:[] },
-      { id:11, name:'曹子茵', shift:'NA', site:'P2', skills:['CS','代理'], prefTool:[] },
-      { id:12, name:'楊于慶', shift:'NA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:13, name:'楊子玄', shift:'NA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:14, name:'梁庭銓', shift:'NA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:15, name:'吳冠宇', shift:'NA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:16, name:'徐淨', shift:'NA', site:'P8', skills:['ARM','派工'], prefTool:[] },
-      { id:17, name:'劉嘉欣', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:18, name:'林峻亦', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:19, name:'范晏嘉', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:20, name:'洪珮鈴', shift:'NA', site:'P8', skills:['ARM','代理'], prefTool:[] },
-      { id:21, name:'許志維', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:22, name:'邱念鴻', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:23, name:'吳惠慈', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:24, name:'郭存榮', shift:'NA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:25, name:'鄭志維', shift:'DA', site:'P2', skills:['CS','派工'], prefTool:[] },
-      { id:26, name:'范豐義', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:27, name:'林曜亦', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:28, name:'劉佩芝D', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:29, name:'吳冠字D', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:30, name:'曹子茵D', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:31, name:'橙子慶D', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:32, name:'池寶潔D', shift:'DA', site:'P2', skills:['CS'], prefTool:[] },
-      { id:33, name:'彭紫祈D', shift:'DA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:34, name:'陳玉凡D', shift:'DA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:35, name:'張文鴻D', shift:'DA', site:'P6', skills:['nonCS','派工'], prefTool:[] },
-      { id:36, name:'陳怡蝶D', shift:'DA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:37, name:'郭紫妍D', shift:'DA', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:38, name:'李秋坤D', shift:'DA', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:39, name:'楊梁漢D', shift:'DA', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:40, name:'郭存鈴D', shift:'DA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:41, name:'沈瑞鈴D', shift:'DA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:42, name:'林峻亦D', shift:'DA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:43, name:'劉麗欣D', shift:'DA', site:'P8', skills:['CS','派工'], prefTool:[] },
-      { id:44, name:'須冠德D', shift:'DA', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:45, name:'洪廸懃D', shift:'DA', site:'P8', skills:['CS'], prefTool:[] },
-      { id:46, name:'DA雙棲甲', shift:'DA', site:'P8', skills:['ARM','雙棲'], prefTool:[] },
-      { id:47, name:'DA雙棲乙', shift:'DA', site:'P8', skills:['CS','雙棲'], prefTool:[] },
-      { id:48, name:'DA代理01', shift:'DA', site:'P8', skills:['代理'], prefTool:[] },
-      { id:49, name:'彭如君', shift:'NB', site:'P6', skills:['nonCS','派工'], prefTool:[] },
-      { id:50, name:'陳詩佳', shift:'NB', site:'P6', skills:['nonCS','代理'], prefTool:[] },
-      { id:51, name:'黃慶瓏', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:52, name:'張文鴻', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:53, name:'吳思蓓', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:54, name:'魏崧哲', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:55, name:'張雅惠', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:56, name:'王芷褕', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:57, name:'張丞軒', shift:'NB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:58, name:'蘇柏修', shift:'NB', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:59, name:'李哲安', shift:'NB', site:'P2', skills:['CS','派工'], prefTool:[] },
-      { id:60, name:'霍潔文', shift:'NB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:61, name:'池賢墩', shift:'NB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:62, name:'呂婕瑀', shift:'NB', site:'P2', skills:['CS','代理'], prefTool:[] },
-      { id:63, name:'周玉玲', shift:'NB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:64, name:'黃振剛', shift:'NB', site:'P8', skills:['ARM','派工'], prefTool:[] },
-      { id:65, name:'彭培雯', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:66, name:'范雯鈞', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:67, name:'黃日怡', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:68, name:'邱宇軒', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:69, name:'陳品鈞', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:70, name:'魏珮萱', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:71, name:'楊崇漢', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:72, name:'賴姿伶', shift:'NB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:73, name:'橘子豪D', shift:'DB', site:'P2', skills:['CS','派工'], prefTool:[] },
-      { id:74, name:'梁嘉銘D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:75, name:'邱念鴻D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:76, name:'張德淵D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:77, name:'橙子玄D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:78, name:'梁庭榕D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:79, name:'張毒璋D', shift:'DB', site:'P2', skills:['CS'], prefTool:[] },
-      { id:80, name:'鄭超豪D', shift:'DB', site:'P2', skills:['P-dipole'], prefTool:[] },
-      { id:81, name:'吳惠芬D', shift:'DB', site:'P6', skills:['nonCS','派工'], prefTool:[] },
-      { id:82, name:'胡正容D', shift:'DB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:83, name:'張德洪D', shift:'DB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:84, name:'關領豪D', shift:'DB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:85, name:'陳詩佳D', shift:'DB', site:'P6', skills:['nonCS'], prefTool:[] },
-      { id:86, name:'李秋姆D', shift:'DB', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:87, name:'林德欣D', shift:'DB', site:'P7', skills:['ARMauto'], prefTool:[] },
-      { id:88, name:'吳冠宇D', shift:'DB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:89, name:'許志維D', shift:'DB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:90, name:'陳品鈞D', shift:'DB', site:'P8', skills:['CS','派工'], prefTool:[] },
-      { id:91, name:'蘇柏郎D', shift:'DB', site:'P8', skills:['ARM'], prefTool:[] },
-      { id:92, name:'范雯嘉D', shift:'DB', site:'P8', skills:['CS'], prefTool:[] },
-      { id:93, name:'彭增堡D', shift:'DB', site:'P8', skills:['nonCS'], prefTool:[] },
-      { id:94, name:'DB雙棲甲', shift:'DB', site:'P8', skills:['ARM','雙棲'], prefTool:[] },
-      { id:95, name:'DB雙棲乙', shift:'DB', site:'P8', skills:['CS','雙棲'], prefTool:[] },
-      { id:96, name:'DB代理01', shift:'DB', site:'P8', skills:['代理'], prefTool:[] },
-    ],
+    members: [],
     tools: [
       // ── P2 ──
       { id:'BXTM01', name:'BXTM01', site:'P2', status:'manual', skills:['CS'], model:'cs' },
@@ -4087,22 +3974,6 @@ function autoAssign(){
 function renderGSTab(mc){
   if(!mc) mc=document.getElementById('mainContent');
   const url=localStorage.getItem('_gs_url')||'';
-  const empList=JSON.parse(localStorage.getItem('_gs_emplist')||'[]');
-
-  // 工號對照表顯示
-  const empRows=empList.map((r,i)=>`
-    <tr>
-      <td><input class="inp" style="width:80px" value="${r.empId}" onchange="gsEmpEdit(${i},'empId',this.value)"></td>
-      <td><input class="inp" style="width:80px" value="${r.name}"  onchange="gsEmpEdit(${i},'name', this.value)"></td>
-      <td><select class="inp" onchange="gsEmpEdit(${i},'shift',this.value)">
-        ${['NA','NB','DA','DB'].map(sf=>`<option ${r.shift===sf?'selected':''}>${sf}</option>`).join('')}
-      </select></td>
-      <td><select class="inp" onchange="gsEmpEdit(${i},'site',this.value)">
-        ${['P2','P6','P7','P8'].map(s=>`<option ${r.site===s?'selected':''}>${s}</option>`).join('')}
-      </select></td>
-      <td><input class="inp" style="width:80px" placeholder="後4碼" value="${r.pwd||''}" onchange="gsEmpEdit(${i},'pwd',this.value)"></td>
-      <td><button class="btn btn-sm" onclick="gsEmpDel(${i})" style="color:#ef4444">✕</button></td>
-    </tr>`).join('');
 
   mc.innerHTML=`
   <div style="padding:16px;max-width:900px">
@@ -4130,91 +4001,19 @@ function renderGSTab(mc){
     </div>
 
     <!-- 資料同步 -->
-    <div class="card" style="margin-bottom:16px">
+    <div class="card">
       <div style="font-weight:700;font-size:13px;margin-bottom:10px">↕ 資料同步</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="gsPushState()" ${!GS_MODE?'disabled':''}>
-          ⬆ 推送本地→雲端
-        </button>
-        <button class="btn btn-ghost" onclick="gsPullState()" ${!GS_MODE?'disabled':''}>
-          ⬇ 拉取雲端→本地
-        </button>
-        <button class="btn btn-ghost" onclick="gsLoadEmpList()" ${!GS_MODE?'disabled':''}>
-          🔄 從雲端載入工號表
-        </button>
-        <button class="btn btn-primary" onclick="gsImportEmpToMembers()" ${!GS_MODE?'disabled':''} style="background:#7c3aed">
-          👥 工號表→同步人員清單
-        </button>
+        <button class="btn btn-primary" onclick="gsPushState()" ${!GS_MODE?'disabled':''}>⬆ 推送本地→雲端</button>
+        <button class="btn btn-ghost" onclick="gsPullState()" ${!GS_MODE?'disabled':''}>⬇ 拉取雲端→本地</button>
       </div>
-      <div id="gs-sync-status" style="font-size:12px;color:#64748b;margin-top:8px"></div>
-    </div>
-
-    <!-- 工號對照表 -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-weight:700;font-size:13px">👥 工號對照表</span>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-sm btn-primary" onclick="gsEmpAdd()">+ 新增</button>
-          <button class="btn btn-sm btn-primary" onclick="gsSyncFromMembers()">從成員匯入</button>
-          <button class="btn btn-sm" onclick="gsSyncEmpIdToMembers()" style="background:#0ea5e9;color:#fff">↔ 同步工號→成員</button>
-          <button class="btn btn-sm" onclick="gsEmpSave()" style="background:#16a34a;color:#fff">
-            💾 儲存工號表
-          </button>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
-        <input id="gs-emp-search" class="inp" style="width:160px" placeholder="🔍 搜尋姓名或工號"
-          oninput="gsEmpSearch(this.value)">
-        <span style="font-size:11px;color:#64748b">密碼預設工號後4碼，員工用工號+密碼登入</span>
-      </div>
-      <div style="overflow-x:auto;overflow-y:auto;max-height:420px;border:1px solid #e2e8f0;border-radius:6px">
-        <table class="tab-table" id="gs-emp-table" style="min-width:100%">
-          <thead style="position:sticky;top:0;background:#f8fafc;z-index:1"><tr>
-            <th>工號</th><th>姓名</th><th>班別</th><th>Site</th>
-            <th>密碼</th><th>操作</th>
-          </tr></thead>
-          <tbody>${empRows||'<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:12px">尚無資料，點「從成員匯入」自動帶入</td></tr>'}</tbody>
-        </table>
+      <div id="gs-sync-status" style="font-size:12px;color:#64748b;margin-top:8px">
+        ${GS_MODE?'✅ 雲端模式（管理員登入時自動同步人員清單）':'⚠ 本地模式'}
       </div>
     </div>
   </div>`;
 }
 
-// ── 工號表操作 ──
-function gsGetEmpList(){ return JSON.parse(localStorage.getItem('_gs_emplist')||'[]'); }
-function gsEmpSearch(q){
-  const rows=document.querySelectorAll('#gs-emp-table tbody tr');
-  const kw=q.trim().toLowerCase();
-  rows.forEach(tr=>{
-    const txt=tr.innerText.toLowerCase();
-    tr.style.display=(!kw||txt.includes(kw))?'':'none';
-  });
-}
-function gsSaveEmpList(list){ localStorage.setItem('_gs_emplist',JSON.stringify(list)); }
-
-function gsEmpEdit(i,field,val){
-  const list=gsGetEmpList(); list[i][field]=val; gsSaveEmpList(list);
-}
-function gsEmpDel(i){
-  const list=gsGetEmpList(); list.splice(i,1); gsSaveEmpList(list); renderAdminTab();
-}
-function gsEmpAdd(){
-  const list=gsGetEmpList();
-  list.push({empId:'',name:'',shift:'NA',site:'P6',pwd:''});
-  gsSaveEmpList(list); renderAdminTab();
-}
-function gsSyncFromMembers(){
-  const existing=gsGetEmpList();
-  const existMap=Object.fromEntries(existing.map(r=>[r.name,r]));
-  // 從 S.members 匯入（排除雙棲/代理等特殊角色）
-  const list=S.members.filter(m=>!['雙棲','代理'].some(s=>(m.skills||[]).includes(s))
-    && !m.name.includes('雙棲') && !m.name.includes('代理')).map(m=>{
-    const ex=existMap[m.name]||{};
-    return {empId:ex.empId||'', name:m.name, shift:m.shift, site:m.site, pwd:ex.pwd||''};
-  });
-  gsSaveEmpList(list); renderAdminTab();
-  toast(`已匯入 ${list.length} 位成員，請補填工號`,'ok');
-}
 
 // 從工號表完整同步 → S.members（新增缺少的人員，更新現有人員的班別/Site）
 async function gsImportEmpToMembers(){
@@ -4269,20 +4068,6 @@ async function autoSaveEmpIds(){
     await gsCall('setEmpIds',{rows});
     gsSave();
   }catch(e){ console.warn('autoSaveEmpIds 失敗:',e.message); }
-}
-
-// 把工號表的 empId 同步回 S.members（讓 S.members 知道每人的工號）
-function gsSyncEmpIdToMembers(){
-  const list=gsGetEmpList();
-  const empMap=Object.fromEntries(list.map(r=>[r.name, r.empId]));
-  let updated=0;
-  S.members=S.members.map(m=>{
-    const eid=empMap[m.name];
-    if(eid && m.empId!==eid){ updated++; return {...m, empId:eid}; }
-    return m;
-  });
-  if(updated>0){ LS_save(); toast(`已同步 ${updated} 位成員工號至排班系統`,'ok'); }
-  else toast('工號已是最新，無需更新','info');
 }
 
 // ── URL 管理 ──
@@ -4351,38 +4136,6 @@ async function gsPullState(){
     }else{el.textContent='⚠ 雲端無資料';}
   }catch(e){el.textContent='❌ '+e.message;}
 }
-async function gsLoadEmpList(){
-  const el=document.getElementById('gs-sync-status');
-  el.textContent='載入工號表...';
-  try{
-    const data=await gsCall('getEmpIds');
-    gsSaveEmpList(data||[]);
-    renderAdminTab();
-    el.textContent=`✅ 載入 ${(data||[]).length} 筆`;
-  }catch(e){el.textContent='❌ '+e.message;}
-}
-async function gsEmpSave(){
-  const list=gsGetEmpList();
-  const invalid=list.filter(r=>!r.empId||!r.name);
-  if(invalid.length){toast('有工號或姓名未填，請檢查','warn');return;}
-  gsSaveEmpList(list);
-  if(GS_MODE){
-    try{
-      // 工號表資料量大，用 fetch POST（Content-Type text/plain 可跨域）
-      const url=localStorage.getItem('_gs_url');
-      await fetch(url,{
-        method:'POST',
-        mode:'no-cors',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'setEmpIds',rows:list})
-      });
-      toast(`✅ 已儲存 ${list.length} 筆工號（本地+雲端）`,'ok');
-    }catch(e){toast('本地已存，雲端失敗：'+e.message,'warn');}
-  }else{
-    toast(`已儲存 ${list.length} 筆工號（本地）`,'ok');
-  }
-}
-
 // GS 登入整合於原始 doLogin
 
 // ══════════════════════════════════════════

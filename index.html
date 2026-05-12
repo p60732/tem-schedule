@@ -444,18 +444,6 @@ async function gsCall(action, params={}) {
   }
 }
 
-// ── 雲端登入（覆蓋本地 doLogin）──
-async function gsLogin(empId, pwd) {
-  const data = await gsCall('login', { empId, pwd });
-  // 登入成功後同步一次完整 state
-  const state = await gsCall('loadState', { empId });
-  if (state && Object.keys(state).length > 0) {
-    S = { ...defState(), ...state };
-    LS_save(); // 同步到 localStorage 作 cache
-  }
-  return data; // {role, empId, name, shift, site}
-}
-
 // ── 雲端儲存（LS_save 的雲端版）──
 let _gsSaveTimer = null;
 function gsSave() {
@@ -1151,42 +1139,54 @@ async function doLogin() {
     }
   }
 
-  // ── 本地模式（原始邏輯）──
+  // ── 管理員登入（雲端模式：先拉最新 state）──
   if(name === 'M') {
     if(pwd !== 'M') { err.textContent='密碼錯誤'; err.style.display='block'; return; }
     CU = { name:'admin', role:'admin', shift:null };
-  } else {
-    if(pwd !== '1') { err.textContent='密碼錯誤'; err.style.display='block'; return; }
-    const m = S.members.find(x => x.name===name);
-    if(!m) { err.textContent=`「${name}」不在人員清單，請確認姓名`; err.style.display='block'; return; }
-    CU = { name, role:'user', shift:m.shift, mid:m.id };
+    if(gsUrl) {
+      // 先拉雲端最新資料，再顯示畫面
+      try {
+        const stateData = await gsCall('loadChunks', {});
+        if(stateData && Object.keys(stateData).length > 0) {
+          S = { ...defState(), ...stateData }; LS_save();
+        }
+      } catch(e2) { console.warn('管理員載入 state 失敗:', e2.message); }
+      // 同步員工清單（新增/更新人員）
+      try {
+        const empList = await gsCall('getEmpIds');
+        if(empList && empList.length) {
+          const existingByName = Object.fromEntries(S.members.map(m=>[m.name,m]));
+          let maxId = Math.max(...S.members.map(m=>m.id||0), 0);
+          let added = 0;
+          empList.forEach(emp=>{
+            if(existingByName[emp.name]){
+              const m = existingByName[emp.name];
+              m.shift=emp.shift; m.site=emp.site; m.empId=emp.empId; m.pwd=m.pwd||emp.pwd;
+            } else {
+              const siteSkills={'P2':['CS'],'P6':['nonCS'],'P7':['ARMauto'],'P8':['ARM']};
+              S.members.push({id:++maxId,name:emp.name,shift:emp.shift,site:emp.site,empId:emp.empId,pwd:emp.pwd,skills:siteSkills[emp.site]||[],prefTool:[]});
+              added++;
+            }
+          });
+          if(added > 0) LS_save();
+        }
+      } catch(e3) { console.warn('管理員同步員工清單失敗:', e3.message); }
+    }
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display = 'flex';
+    renderApp();
+    if(gsUrl) toast('✅ 管理員登入（已同步雲端資料）','ok');
+    return;
   }
+
+  // ── 本地模式：一般使用者（無 GS URL）──
+  if(pwd !== '1') { err.textContent='密碼錯誤'; err.style.display='block'; return; }
+  const m = S.members.find(x => x.name===name);
+  if(!m) { err.textContent=`「${name}」不在人員清單，請確認姓名`; err.style.display='block'; return; }
+  CU = { name, role:'user', shift:m.shift, mid:m.id };
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appShell').style.display = 'flex';
   renderApp();
-  if(GS_MODE && window.CU?.role !== 'admin'){
-    gsCall('getStage',{}).then(d=>{ _lastStage=d?.stage??S.stage; startPolling(); }).catch(()=>{ _lastStage=S.stage; startPolling(); });
-  }
-  // 管理員登入後自動從 Sheet 同步員工清單
-  if(GS_MODE && window.CU?.role === 'admin'){
-    gsCall('getEmpIds').then(empList=>{
-      if(!empList||!empList.length) return;
-      const existingByName=Object.fromEntries(S.members.map(m=>[m.name,m]));
-      let maxId=Math.max(...S.members.map(m=>m.id||0),0);
-      let added=0;
-      empList.forEach(emp=>{
-        if(existingByName[emp.name]){
-          const m=existingByName[emp.name];
-          m.shift=emp.shift; m.site=emp.site; m.empId=emp.empId; m.pwd=m.pwd||emp.pwd;
-        } else {
-          const siteSkills={'P2':['CS'],'P6':['nonCS'],'P7':['ARMauto'],'P8':['ARM']};
-          S.members.push({id:++maxId,name:emp.name,shift:emp.shift,site:emp.site,empId:emp.empId,pwd:emp.pwd,skills:siteSkills[emp.site]||[],prefTool:[]});
-          added++;
-        }
-      });
-      if(added>0){ LS_save(); renderApp(); toast(`已自動同步 ${added} 位新員工至排班系統`,'ok'); }
-    }).catch(()=>{});
-  }
 }
 function doLogout() {
   CU = null;
